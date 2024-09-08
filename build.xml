@@ -181,7 +181,7 @@
         <!-- *** CUSTOMIZE HERE AS REQUIRED BY YOUR APPLICATION *** -->
         <!--
         -->
-        <pathelement location="${web.home}/WEB-INF/lib"/>
+        <pathelement location="${web.home}/WEB-INF/lib/gson-2.11.0.jar"/>
 
         <!-- Include all elements that Tomcat exposes to applications -->
         <fileset dir="${catalina.home}/bin">
