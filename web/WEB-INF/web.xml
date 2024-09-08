@@ -1,0 +1,64 @@
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                      https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0"
+         metadata-complete="false">
+
+        <security-constraint>
+            <display-name>user1 security constraint</display-name>
+            <web-resource-collection>
+                <web-resource-name>user1 files</web-resource-name>
+                <!-- Define the context-relative URL(s) to be protected -->
+                <url-pattern>/user1/*</url-pattern>
+                <!-- If you list http methods, only those methods are protected so -->
+                <!-- the constraint below ensures all other methods are denied     -->
+                <http-method>DELETE</http-method>
+                <http-method>GET</http-method>
+                <http-method>POST</http-method>
+                <http-method>PUT</http-method>
+            </web-resource-collection>
+            <auth-constraint>
+                <!-- Anyone with one of the listed roles may access this area -->
+                <role-name>user1</role-name>
+            </auth-constraint>
+        </security-constraint>
+
+
+
+        <security-constraint>
+            <display-name>user2 security constraint</display-name>
+            <web-resource-collection>
+                <web-resource-name>user2 files</web-resource-name>
+                <!-- Define the context-relative URL(s) to be protected -->
+                <url-pattern>/user2/*</url-pattern>
+                <!-- If you list http methods, only those methods are protected so -->
+                <!-- the constraint below ensures all other methods are denied     -->
+                <http-method>DELETE</http-method>
+                <http-method>GET</http-method>
+                <http-method>POST</http-method>
+                <http-method>PUT</http-method>
+            </web-resource-collection>
+            <auth-constraint>
+                <!-- Anyone with one of the listed roles may access this area -->
+                <role-name>user2</role-name>
+            </auth-constraint>
+        </security-constraint>
+
+        <login-config>
+            <auth-method>FORM</auth-method>
+            <realm-name>Example Form-Based Authentication Area</realm-name>
+            <form-login-config>
+                <form-login-page>/logIn.html</form-login-page>
+                 <form-error-page>/logInError.html</form-error-page>
+            </form-login-config>
+        </login-config>
+
+        <resource-ref>
+            <description>DB Connection</description>
+            <res-ref-name>jdbc/SmolNAS</res-ref-name>
+            <res-type>javax.sql.DataSource</res-type>
+            <res-auth>Container</res-auth>
+        </resource-ref>
+</web-app>
+
