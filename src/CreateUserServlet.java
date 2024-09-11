@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
 
 
@@ -42,15 +44,25 @@ public void doPost(HttpServletRequest req, HttpServletResponse resp) throws Serv
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }else {
             try{
-               PreparedStatement insertUser = con.prepareStatement("INSERT INTO userData VALUES (?,?)");
-               insertUser.setString(1,userName);
-               insertUser.setString(2,pass);
-               insertUser.executeUpdate();
-               writer.write("User added Successfully");
-               resp.setStatus(HttpServletResponse.SC_OK);
+                PreparedStatement insertUser = con.prepareStatement("INSERT INTO userData VALUES (?,?)");
+                insertUser.setString(1,userName);
+                insertUser.setString(2,pass);
+                insertUser.executeUpdate();
+
+                //TO DO: turn the data directory into a env var to be read
+                // (nice for containerization)
+                try{
+                    Files.createDirectory(Paths.get("/home/mostafa/Desktop/SmolData/"+userName));
+                }catch(IOException ex){
+                    System.out.println("could not create user directory" + ex.getMessage());
+                }
+
+                writer.write("<div>User Added Successfully</div><a href=\"/SmolNAS/logIn.html\">Log In</a>");
+                resp.setStatus(HttpServletResponse.SC_OK);
             }catch(SQLException ex){
-               writer.write("USER COULD NOT BE ADDED");
-               System.out.println("could not add user:" + ex.getMessage());
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                writer.write("USER COULD NOT BE ADDED");
+                System.out.println("could not add user:" + ex.getMessage());
             }
         }
 
