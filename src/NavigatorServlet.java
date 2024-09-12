@@ -26,7 +26,7 @@ public class NavigatorServlet extends HttpServlet {
         final PrintWriter writer = resp.getWriter();
         Connection con = null;
         try{
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SmolNAS","root", "root");
+            con = ConnectionPool.getConnection();
             Cookie[] cookies= req.getCookies();
             String requestSessionID = null;
 
@@ -56,6 +56,13 @@ public class NavigatorServlet extends HttpServlet {
             }
         }catch(SQLException ex){
             System.out.println("error occured while accessing db" + ex.getMessage());
+        }finally {
+            //TO DO: close rest of resources
+            try{
+                con.close();
+            }catch(SQLException ex){
+                System.out.println("cannot close connection: "+ ex.getMessage());
+            }
         }
     }
 }

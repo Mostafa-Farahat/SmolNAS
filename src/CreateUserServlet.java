@@ -30,7 +30,7 @@ public void doPost(HttpServletRequest req, HttpServletResponse resp) throws Serv
 
     Connection con = null;
     try{
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SmolNAS","root", "root");
+        con = ConnectionPool.getConnection();
         PreparedStatement checkDuplicate = con.prepareStatement("SELECT userName FROM userData WHERE userName= ?");
         checkDuplicate.setString(1, userName);
 

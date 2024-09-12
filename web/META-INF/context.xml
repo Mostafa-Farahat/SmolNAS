@@ -25,8 +25,7 @@
     <!-- url: The JDBC connection url for connecting to your MySQL database.
          -->
 
-    <Resource name="jdbc/SmolNAS" auth="Container" type="javax.sql.DataSource"
-              maxTotal="100" maxIdle="30" maxWaitMillis="10000"
+    <Resource name="jdbc/SmolNASdb" auth="Container" type="javax.sql.DataSource"
               username="root" password="root" driverClassName="com.mysql.jdbc.Driver"
               url="jdbc:mysql://localhost:3306/SmolNAS"/>
 

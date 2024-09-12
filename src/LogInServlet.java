@@ -26,7 +26,7 @@ public class LogInServlet extends HttpServlet {
 
         Connection connection = null;
         try{
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/SmolNAS","root", "root");
+            connection = ConnectionPool.getConnection();
             PreparedStatement getUser = connection.prepareStatement("SELECT userName,password FROM userData WHERE userName = ?");
             getUser.setString(1,userName);
             ResultSet result = getUser.executeQuery();
