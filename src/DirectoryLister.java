@@ -1,6 +1,6 @@
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
+
+import java.io.*;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,8 +26,20 @@ public class DirectoryLister {
 
         if(!Files.isDirectory(entityPath)){
             //TO DO:
-        }else{
-            //is a directory
+        }else{//is a directory
+            //writing html template to response
+            try{
+                File file = new File("/home/mostafa/Desktop/SmolNAS/web/directoryTemplate.html");
+                FileInputStream fileInput= new FileInputStream(file);
+                int r=0;
+                while((r=fileInput.read())!=-1){
+                    writer.write((char)r);
+                }
+                fileInput.close();
+            }catch(IOException ex){
+                System.out.println("could not open html template");
+            }
+
             try(DirectoryStream<Path> directorTree = Files.newDirectoryStream(entityPath)){
                 for(Path entity : directorTree){
                     String fileName = entity.getFileName().toString();
@@ -38,12 +50,13 @@ public class DirectoryLister {
                     }else{
                         newUrl = url+"/"+entity.getFileName();
                     }
-
+                    //listing files and directories
+                    Path fullPath =  entityPath.resolve(entity.getFileName());
                     String html = String.format("<div>\n" +
                             "    <a href=\"%s\">%s</a>\n" +
-                            "    <button>Download File</button>\n" +
-                            "    <button>Delete File</button>\n" +
-                            "</div><br>", newUrl, fileName);
+                            "    <button onclick='download(\"%s\")'>Download</button>\n" +
+                            "    <button onclick='del(\"%s\")'>Delete</button>\n" +
+                            "</div><br>", newUrl, fileName, fullPath, fullPath);
                     writer.write(html);
                 }
                 directorTree.close();
@@ -51,6 +64,5 @@ public class DirectoryLister {
                 System.out.println("could not list directory item" + ex.getMessage());
             }
         }
-
     }
 }
