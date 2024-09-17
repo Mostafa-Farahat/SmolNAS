@@ -39,6 +39,9 @@ public void doPost(HttpServletRequest req, HttpServletResponse resp) throws Serv
         if(!pass.equals(passVerify)){
             writer.write("entries in password and verify password do not match please try again");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }else if(userName.length() > 32){
+            writer.write("userName should be no more than 32 characters");
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }else if(result.isBeforeFirst()){//the checkDuplicate returned a non-empty set
             writer.write("The user name specified exists please try a different user name");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
