@@ -1,3 +1,5 @@
+package util;
+
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.*;
@@ -11,12 +13,12 @@ import java.util.regex.Pattern;
 public class DirectoryLister {
     private final Path dataRoot;
     private final PrintWriter writer;
-    DirectoryLister(Path dataRoot, HttpServletResponse resp) throws IOException{
+    public DirectoryLister(Path dataRoot, HttpServletResponse resp) throws IOException{
             this.dataRoot = dataRoot;
             this.writer = resp.getWriter();
     }
 
-    void listDirectory(String url){
+    public void listDirectory(String url){
         //extract path on system form url
         Pattern pattern = Pattern.compile("/SmolNAS/data/");
         Matcher matcher = pattern.matcher(url);
@@ -39,6 +41,8 @@ public class DirectoryLister {
             }catch(IOException ex){
                 System.out.println("could not open html template");
             }
+
+            writer.write(String.format("<div><b>Index Of: %s/</b></div><br>",pathFromRoot));
 
             try(DirectoryStream<Path> directorTree = Files.newDirectoryStream(entityPath)){
                 for(Path entity : directorTree){

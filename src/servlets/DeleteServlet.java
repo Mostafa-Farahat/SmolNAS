@@ -1,10 +1,15 @@
+package servlets;
+
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import util.OwnerFromQuery;
+import util.Verification;
 
+import java.io.PrintWriter;
 import java.nio.file.*;
 import java.io.IOException;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -19,9 +24,18 @@ public class DeleteServlet extends HttpServlet {
     }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        final OwnerFromQuery parser = new OwnerFromQuery();
+        PrintWriter writer = resp.getWriter();
+
+        //verification
+        if(!Verification.isUserAuthorized(req,parser)){//if not authorized yeet request
+            writer.write("YOU ARE NOT AUTHORIZED TO MAKE CHANGES TO THIS DIRECTORY");
+            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+
         //recursivly traverse the directory DFS and delete the folder
         //when all files in it are deleted
-
         String pathString = req.getParameter("path");
         Path root = Paths.get(pathString);//path of file to be deleted
 

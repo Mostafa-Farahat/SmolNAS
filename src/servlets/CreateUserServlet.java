@@ -1,9 +1,13 @@
+package servlets;
+
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import util.ConnectionPool;
+import util.HashGenerator;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -49,7 +53,7 @@ public void doPost(HttpServletRequest req, HttpServletResponse resp) throws Serv
             try{
                 PreparedStatement insertUser = con.prepareStatement("INSERT INTO userData VALUES (?,?)");
                 insertUser.setString(1,userName);
-                insertUser.setString(2,HashGenerator.generateSHA256(pass));
+                insertUser.setString(2, HashGenerator.generateSHA256(pass));
                 insertUser.executeUpdate();
 
                 //TO DO: turn the data directory into a env var to be read

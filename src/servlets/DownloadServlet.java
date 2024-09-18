@@ -1,3 +1,5 @@
+package servlets;
+
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
@@ -5,6 +7,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import util.OwnerFromQuery;
+import util.Verification;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -22,6 +26,17 @@ public class DownloadServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        final OwnerFromQuery parser = new OwnerFromQuery();
+
+        //verification
+        if(!Verification.isUserAuthorized(req,parser)){//if not authorized yeet request
+            PrintWriter writer = resp.getWriter();
+            writer.write("YOU ARE NOT AUTHORIZED TO ACCESS THIS DIRECTORY");
+            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+
         if(Files.isDirectory(Paths.get(req.getParameter("path")))){
             resp.setContentType("text/plain");
             resp.setHeader("Content-Disposition", "inline");

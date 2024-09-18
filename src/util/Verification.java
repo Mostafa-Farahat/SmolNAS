@@ -1,30 +1,24 @@
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
+package util;
+
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Paths;
 import java.sql.Connection;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-@WebServlet("/data/*")
-public class NavigatorServlet extends HttpServlet {
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-    }
+public class Verification {
+    public static boolean isUserAuthorized(HttpServletRequest req, UrlParser parser){
+        //the UrlParser interface provides a method to return the directory owner
+        //against which the verification should be done.
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //verification
-        String directoryOwner = req.getRequestURI().split("/")[3];
-        final PrintWriter writer = resp.getWriter();
+        //the interface is passed in order to provide different ways
+        //to get the owner name depending on the usage
+        // (e.g the owner could be in a url query or the url itself)
+        String directoryOwner = parser.getDirectoryOwner(req);
         Connection con = null;
+        boolean status = false;
         try{
             con = ConnectionPool.getConnection();
             Cookie[] cookies= req.getCookies();
@@ -43,15 +37,14 @@ public class NavigatorServlet extends HttpServlet {
 
             if(!result.isBeforeFirst()){
                 //if result set is empty then the token doesn't exist in db
-                writer.write("you access token is invalid");
-                System.out.println("your sesison ID is invalid");
+                System.out.println("your sesison ID doesn't exist in db");//for logging
+                status = false;
             }else{
                 result.next();
-                if(result.getString(1).equals(directoryOwner)){
-                    DirectoryLister lister = new DirectoryLister(Paths.get("/home/mostafa/Desktop/SmolData"), resp);
-                    lister.listDirectory(req.getRequestURI());
-                }else{
-                    writer.write("YOU ARE NOT AUTHORIZED TO ACCESS THIS DIRECTORY");
+                if(result.getString(1).equals(directoryOwner)){//access token corresponds to owner
+                    status = true;
+                }else{//access token not coresponding to owner
+                    status = false;
                 }
             }
         }catch(SQLException ex){
@@ -64,5 +57,6 @@ public class NavigatorServlet extends HttpServlet {
                 System.out.println("cannot close connection: "+ ex.getMessage());
             }
         }
+        return status;
     }
 }
