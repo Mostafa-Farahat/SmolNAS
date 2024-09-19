@@ -13,8 +13,6 @@ import java.io.PrintWriter;
 import java.nio.file.*;
 import java.io.IOException;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @WebServlet("/delete")
 public class DeleteServlet extends HttpServlet {
@@ -64,9 +62,7 @@ public class DeleteServlet extends HttpServlet {
         });
 
         //overWriting the path string to make it equal to the path of the directory
-        Pattern regex = Pattern.compile("/home/mostafa/Desktop/SmolData");
-        Matcher matcher = regex.matcher(pathString);
-        pathString = matcher.replaceFirst("");
+        pathString = pathString.replaceFirst("/home/mostafa/Desktop/SmolData","");
 
         String[] arr = pathString.split("/");
         arr[0]="";

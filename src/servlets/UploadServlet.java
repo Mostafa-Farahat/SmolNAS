@@ -8,19 +8,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
-import util.OwnerFromUrl;
-import util.Verification;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @WebServlet("/upload")
@@ -45,13 +40,8 @@ public class UploadServlet extends HttpServlet {
         List<Part> parts = req.getParts().stream().filter(part -> "files".equals(part.getName()) && part.getSize()>0).collect(Collectors.toList());
 
         Path dataRoot = Paths.get("/home/mostafa/Desktop/SmolData/");
-
-        Pattern regex = Pattern.compile("/SmolNAS/data/");
-        Matcher matcher = regex.matcher(req.getParameter("path"));
-        String relativePath = matcher.replaceFirst("");
-
+        String relativePath = req.getParameter("path").replaceFirst("/SmolNAS/data/", "");
         Path directoryAbsloutePath= dataRoot.resolve(relativePath);
-
 
         for(Part filePart : parts){
             String fileName = filePart.getSubmittedFileName();

@@ -7,8 +7,6 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class DirectoryLister {
     private final Path dataRoot;
@@ -20,9 +18,7 @@ public class DirectoryLister {
 
     public void listDirectory(String url){
         //extract path on system form url
-        Pattern pattern = Pattern.compile("/SmolNAS/data/");
-        Matcher matcher = pattern.matcher(url);
-        String pathFromRoot = matcher.replaceFirst("");
+        String pathFromRoot = url.replaceAll("/SmolNAS/data/","");
         //Entity is used because the path could refer to a file or directory
         Path entityPath = Paths.get(dataRoot.toString() + "/" + pathFromRoot);
 
