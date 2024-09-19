@@ -15,6 +15,7 @@
         }
         document.addEventListener("DOMContentLoaded", function(event) {
             document.getElementById('uploadForm').action=window.location.protocol+"//"+window.location.host+"/SmolNAS/upload?path="+window.location.pathname;
+            document.getElementById('mkdirForm').action=window.location.protocol+"//"+window.location.host+"/SmolNAS/mkdir?path="+window.location.pathname;
         });
 
 </script>
@@ -24,6 +25,14 @@
     <input type="file" name="files" multiple="true"/>
     <input type="submit" value="Upload Selection">
 </form>
+<br>
+<form action="" method="post" id="mkdirForm">
+    <label for="dirName">Directory Name</label>
+    <input type="text" id="dirName" name="dirName"/>
+    <input type="submit" value="Create Directory">
+</form>
+<hr>
+
 
 </body>
 </html>
