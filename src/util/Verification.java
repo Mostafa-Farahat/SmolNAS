@@ -22,6 +22,11 @@ public class Verification {
         try{
             con = ConnectionPool.getConnection();
             Cookie[] cookies= req.getCookies();
+            if(cookies==null){
+                System.out.println("request without a cookie");
+                return false;
+            }
+
             String requestSessionID = null;
 
             for(Cookie cookie : cookies){
