@@ -12,9 +12,11 @@ import jakarta.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,18 +50,14 @@ public class UploadServlet extends HttpServlet {
             InputStream uploaded = filePart.getInputStream();
             Path newFile = directoryAbsloutePath.resolve(fileName);
 
-            OutputStream outFile = Files.newOutputStream(newFile);
-
-            byte[] buffer = new byte[4000];
-            int bytesRead = 0;
-            bytesRead = uploaded.read(buffer);
-            while(bytesRead != -1){
-                outFile.write(buffer,0,bytesRead); //in order to not copy extra garbage bytes from the buffer
-                bytesRead = uploaded.read(buffer);
+            try{
+                long bytesCopied = Files.copy(uploaded, newFile, StandardCopyOption.REPLACE_EXISTING);
+            }catch(IOException ex){
+                PrintWriter writer = resp.getWriter();
+                writer.write("An Error Occured While Uploading Your Selection");
+            }finally{
+                uploaded.close();
             }
-            uploaded.close();
-            outFile.flush();
-            outFile.close();
         }
         resp.sendRedirect("http://localhost:8080"+ req.getParameter("path"));
 

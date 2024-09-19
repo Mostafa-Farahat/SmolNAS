@@ -10,11 +10,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import util.OwnerFromQuery;
 import util.Verification;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @WebServlet("/download")
@@ -25,7 +24,7 @@ public class DownloadServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 
         final OwnerFromQuery parser = new OwnerFromQuery();
 
@@ -40,8 +39,8 @@ public class DownloadServlet extends HttpServlet {
         if(Files.isDirectory(Paths.get(req.getParameter("path")))){
             resp.setContentType("text/plain");
             resp.setHeader("Content-Disposition", "inline");
-            PrintWriter writer = resp.getWriter();
             //TO DO: allow directory download of directories as a zip
+            PrintWriter writer = resp.getWriter();
             writer.write("downloading directories is currently unavailable");
             return;
         }
@@ -53,19 +52,15 @@ public class DownloadServlet extends HttpServlet {
         arr = null;
 
         ServletOutputStream outStream = resp.getOutputStream();
-        File file = new File(req.getParameter("path"));
-        FileInputStream inputFile = new FileInputStream(file);
-
-        byte[] buffer = new byte[4000];
-        int bytesRead = 0;
-        bytesRead = inputFile.read(buffer);
-        while(bytesRead != -1){
-            outStream.write(buffer,0,bytesRead); //in order to not copy extra garbage bytes from the buffer
-            bytesRead = inputFile.read(buffer);
+        Path inputFile = Paths.get(req.getParameter("path"));
+        try{
+            long bytesCopied = Files.copy(inputFile, outStream);
+        }catch(IOException ex){
+            PrintWriter writer = resp.getWriter();
+            writer.write("and error has occured while downloading your file");
+        }finally{
+            outStream.flush();
+            outStream.close();
         }
-        inputFile.close();
-        outStream.flush();
-        outStream.close();
-
     }
 }
