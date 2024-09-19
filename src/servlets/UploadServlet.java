@@ -8,10 +8,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import util.OwnerFromQuery;
+import util.OwnerFromUrl;
+import util.Verification;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,13 +32,13 @@ public class UploadServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //TO DO: Implement verification for uploads
-//        OwnerFromUrl parser = new OwnerFromUrl();
-//        if(!Verification.isUserAuthorized(req,parser)){
-//            PrintWriter writer = resp.getWriter();
-//            writer.write("YOU ARE NOT AUTHORIZED TO MAKE CHANGES TO THIS DIRECTORY");
-//            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
-//            return;
-//        }
+        OwnerFromQuery parser = new OwnerFromQuery();
+        if(!Verification.isUserAuthorized(req,parser)){
+            PrintWriter writer = resp.getWriter();
+            writer.write("YOU ARE NOT AUTHORIZED TO MAKE CHANGES TO THIS DIRECTORY");
+            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
 
 //      can't get a part by name so we use stream API to get what we need
         List<Part> parts = req.getParts().stream().filter(part -> "files".equals(part.getName()) && part.getSize()>0).collect(Collectors.toList());
