@@ -42,7 +42,7 @@ public class DirectoryLister {
 
             try(DirectoryStream<Path> directorTree = Files.newDirectoryStream(entityPath)){
                 for(Path entity : directorTree){
-                    String fileName = entity.getFileName().toString();
+                    StringBuilder fileNameBuilder = new StringBuilder(entity.getFileName().toString());
                     String newUrl = null;
                     if(url.charAt(url.length()-1) == '/'){
                         //the url already has a / at the end so don't add it
@@ -50,7 +50,14 @@ public class DirectoryLister {
                     }else{
                         newUrl = url+"/"+entity.getFileName();
                     }
+
+                    //add a / to directory names to distinguish them from files
+                    if(Files.isDirectory(entity)){
+                        fileNameBuilder.append("/");
+                    }
+
                     //listing files and directories
+                    String fileName = fileNameBuilder.toString();
                     Path fullPath =  entityPath.resolve(entity.getFileName());
                     String html = String.format("<div>\n" +
                             "    <a href=\"%s\">%s</a>\n" +
