@@ -76,7 +76,8 @@
 
     -->
 
-    <property file="build.properties"/>
+<!--    <property file="build.properties"/>-->
+    <property environment="env"/>
 <!--    <property file="${user.home}/build.properties"/>-->
 
 
@@ -124,11 +125,11 @@
 
     -->
 
-    <property name="app.name"      value="myapp"/>
+    <property name="app.name"      value="SmolNAS"/>
     <property name="app.path"      value="/${app.name}"/>
     <property name="app.version"   value="0.1-dev"/>
     <property name="build.home"    value="${basedir}/build"/>
-    <property name="catalina.home" value="../../../.."/> <!-- UPDATE THIS! -->
+    <property name="catalina.home" value="${env.CATALINA_HOME}"/> <!-- UPDATE THIS! -->
     <property name="dist.home"     value="${basedir}/dist"/>
     <property name="docs.home"     value="${basedir}/docs"/>
     <property name="manager.url"   value="http://localhost:8080/manager/text"/>
@@ -181,7 +182,8 @@
         <!-- *** CUSTOMIZE HERE AS REQUIRED BY YOUR APPLICATION *** -->
         <!--
         -->
-        <pathelement location="${web.home}/WEB-INF/lib/gson-2.11.0.jar"/>
+        <pathelement location="${basedir}/web/WEB-INF/lib/mysql-connector-j-9.0.0.jar"/>
+        <pathelement location="${basedir}/web/WEB-INF/lib/mysql-connector-java-9.0.0.jar"/>
 
         <!-- Include all elements that Tomcat exposes to applications -->
         <fileset dir="${catalina.home}/bin">
