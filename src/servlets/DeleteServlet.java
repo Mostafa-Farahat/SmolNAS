@@ -65,7 +65,6 @@ public class DeleteServlet extends HttpServlet {
         pathString = pathString.replaceFirst(System.getenv("NAS_DATAROOT"),"");
 
         String[] arr = pathString.split("/");
-        arr[0]="";
         arr[arr.length-1]="";
         StringBuilder pathBuffer = new StringBuilder();
         for(int i=0; i<arr.length-1; i++){
@@ -78,6 +77,6 @@ public class DeleteServlet extends HttpServlet {
         }
 
         pathString = pathBuffer.toString();
-        resp.sendRedirect("http://localhost:8080/SmolNAS/data" + pathString);
+        resp.sendRedirect("http://localhost:8080/SmolNAS/data/" + pathString);
     }
 }
