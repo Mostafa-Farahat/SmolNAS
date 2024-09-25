@@ -59,7 +59,7 @@ public void doPost(HttpServletRequest req, HttpServletResponse resp) throws Serv
                 //TO DO: turn the data directory into a env var to be read
                 // (nice for containerization)
                 try{
-                    Files.createDirectory(Paths.get("/home/mostafa/Desktop/SmolData/"+userName));
+                    Files.createDirectory(Paths.get(System.getenv("NAS_DATAROOT")+userName));
                 }catch(IOException ex){
                     System.out.println("could not create user directory" + ex.getMessage());
                 }

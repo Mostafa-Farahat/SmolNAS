@@ -33,7 +33,7 @@ public class mkdirServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
-        Path dataRoot = Paths.get("/home/mostafa/Desktop/SmolData/");
+        Path dataRoot = Paths.get(System.getenv("NAS_DATAROOT"));
         String relativePath = req.getParameter("path").replaceFirst("/SmolNAS/data/","");
 
         Path directoryAbsloutePath= dataRoot.resolve(relativePath);

@@ -27,7 +27,7 @@ public class DirectoryLister {
         }else{//is a directory
             //writing html template to response
             try{
-                File file = new File("/home/mostafa/Desktop/SmolNAS/web/directoryTemplate.html");
+                File file = new File( System.getenv("CATALINA_HOME")+"/webapps/SmolNAS/directoryTemplate.html");
                 FileInputStream fileInput= new FileInputStream(file);
                 int r=0;
                 while((r=fileInput.read())!=-1){

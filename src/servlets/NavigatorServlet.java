@@ -26,7 +26,7 @@ public class NavigatorServlet extends HttpServlet {
         final PrintWriter writer = resp.getWriter();
         final OwnerFromUrl parser = new OwnerFromUrl();
         if(Verification.isUserAuthorized(req,parser)){
-            DirectoryLister lister = new DirectoryLister(Paths.get("/home/mostafa/Desktop/SmolData"), resp);
+            DirectoryLister lister = new DirectoryLister(Paths.get(System.getenv("NAS_DATAROOT")), resp);
             lister.listDirectory(req.getRequestURI());
         }else{
             writer.write("YOU ARE NOT AUTHORIZED TO ACCESS THIS DIRECTORY");

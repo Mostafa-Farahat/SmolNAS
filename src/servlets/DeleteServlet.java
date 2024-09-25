@@ -62,7 +62,7 @@ public class DeleteServlet extends HttpServlet {
         });
 
         //overWriting the path string to make it equal to the path of the directory
-        pathString = pathString.replaceFirst("/home/mostafa/Desktop/SmolData","");
+        pathString = pathString.replaceFirst(System.getenv("NAS_DATAROOT"),"");
 
         String[] arr = pathString.split("/");
         arr[0]="";

@@ -43,7 +43,7 @@ public class UploadServlet extends HttpServlet {
 //      can't get a part by name so we use stream API to get what we need
         List<Part> parts = req.getParts().stream().filter(part -> "files".equals(part.getName()) && part.getSize()>0).collect(Collectors.toList());
 
-        Path dataRoot = Paths.get("/home/mostafa/Desktop/SmolData/");
+        Path dataRoot = Paths.get(System.getenv("NAS_DATAROOT"));
         String relativePath = req.getParameter("path").replaceFirst("/SmolNAS/data/", "");
         Path directoryAbsloutePath= dataRoot.resolve(relativePath);
 
