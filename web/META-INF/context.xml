@@ -27,6 +27,6 @@
 
     <Resource name="jdbc/SmolNASdb" auth="Container" type="javax.sql.DataSource"
               username="root" password="root" driverClassName="com.mysql.jdbc.Driver"
-              url="jdbc:mysql://localhost:3306/SmolNAS"/>
+              url="jdbc:mysql://SmolNASdb:3306/SmolNAS"/>
 
 </Context>
