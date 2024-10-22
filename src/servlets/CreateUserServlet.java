@@ -43,6 +43,9 @@ public void doPost(HttpServletRequest req, HttpServletResponse resp) throws Serv
         if(!pass.equals(passVerify)){
             writer.write("entries in password and verify password do not match please try again");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }else if(pass.length() < 8){
+            writer.write("your password should be 8 characters or more");
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }else if(userName.length() > 32){
             writer.write("userName should be no more than 32 characters");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -56,8 +59,6 @@ public void doPost(HttpServletRequest req, HttpServletResponse resp) throws Serv
                 insertUser.setString(2, HashGenerator.generateSHA256(pass));
                 insertUser.executeUpdate();
 
-                //TO DO: turn the data directory into a env var to be read
-                // (nice for containerization)
                 try{
                     Files.createDirectory(Paths.get(System.getenv("NAS_DATAROOT")+userName));
                 }catch(IOException ex){
