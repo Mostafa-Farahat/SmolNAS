@@ -34,10 +34,18 @@ public class DeleteServlet extends HttpServlet {
 
         //recursivly traverse the directory DFS and delete the folder
         //when all files in it are deleted
-        String pathString = req.getParameter("path");
-        Path root = Paths.get(pathString);//path of file to be deleted
 
-        Files.walkFileTree(root, new SimpleFileVisitor<Path>(){
+        String path = req.getParameter("path");
+        StringBuilder pathBuffer = new StringBuilder();
+        pathBuffer.append(System.getenv("NAS_DATAROOT"));//root directory
+        pathBuffer.append(path.replaceFirst("/SmolNAS/data/", ""));//current entity from root
+
+        Path inputEntity = Paths.get(pathBuffer.toString());//path of file to download
+
+//        String pathString = req.getParameter("path");
+//        Path root = Paths.get(pathString);//path of file to be deleted
+
+        Files.walkFileTree(inputEntity, new SimpleFileVisitor<Path>(){
             public FileVisitResult visitFile(Path file, BasicFileAttributes attr){
                 try{
                     Files.delete(file);
@@ -61,22 +69,8 @@ public class DeleteServlet extends HttpServlet {
             }
         });
 
-        //overWriting the path string to make it equal to the path of the directory
-        pathString = pathString.replaceFirst(System.getenv("NAS_DATAROOT"),"");
-
-        String[] arr = pathString.split("/");
-        arr[arr.length-1]="";
-        StringBuilder pathBuffer = new StringBuilder();
-        for(int i=0; i<arr.length-1; i++){
-            //perventing extra / for aesthetic purposes
-            if(i == arr.length-2){
-                pathBuffer.append(arr[i]);
-            }else{
-                pathBuffer.append(arr[i]).append("/");
-            }
-        }
-
-        pathString = pathBuffer.toString();
-        resp.sendRedirect("http://localhost:8080/SmolNAS/data/" + pathString);
+        String fileName = "/"+inputEntity.getFileName().toString();
+        String append = path.replaceFirst(fileName, "");
+        resp.sendRedirect("http://localhost:8080" + append);
     }
 }

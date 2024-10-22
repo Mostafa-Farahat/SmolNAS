@@ -28,6 +28,13 @@ public class DownloadServlet extends HttpServlet {
 
         final OwnerFromQuery parser = new OwnerFromQuery();
 
+        String path = req.getParameter("path");
+        StringBuilder pathBuffer = new StringBuilder();
+        pathBuffer.append(System.getenv("NAS_DATAROOT"));//root directory
+        pathBuffer.append(path.replaceFirst("/SmolNAS/data/", ""));//current entity from root
+
+        Path inputEntity = Paths.get(pathBuffer.toString());//path of file to download
+
         //verification
         if(!Verification.isUserAuthorized(req,parser)){//if not authorized yeet request
             PrintWriter writer = resp.getWriter();
@@ -36,7 +43,7 @@ public class DownloadServlet extends HttpServlet {
             return;
         }
 
-        if(Files.isDirectory(Paths.get(req.getParameter("path")))){
+        if(Files.isDirectory(inputEntity)){
             resp.setContentType("text/plain");
             resp.setHeader("Content-Disposition", "inline");
             //TO DO: allow directory download of directories as a zip
@@ -46,15 +53,14 @@ public class DownloadServlet extends HttpServlet {
         }
 
         resp.setContentType("application/octet-stream");
-        String[] arr = req.getParameter("path").split("/");
-        String fileName = arr[arr.length -1];
-        resp.setHeader("Content-Disposition", "attachment; filename="+fileName);
+        String[] arr = path.split("/");
+        resp.setHeader("Content-Disposition", "attachment; filename="+arr[arr.length-1]);
         arr = null;
 
         ServletOutputStream outStream = resp.getOutputStream();
-        Path inputFile = Paths.get(req.getParameter("path"));
+
         try{
-            long bytesCopied = Files.copy(inputFile, outStream);
+            long bytesCopied = Files.copy(inputEntity, outStream);
         }catch(IOException ex){
             PrintWriter writer = resp.getWriter();
             writer.write("and error has occured while downloading your file");

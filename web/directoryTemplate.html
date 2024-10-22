@@ -8,10 +8,10 @@
 <script>
 <!--    TO DO:replace localhost with an actual IP-->
         function download(path){
-            location.href = "http://localhost:8080/SmolNAS/download?path="+path;
+            location.href = "http://localhost:8080/SmolNAS/download?path="+window.location.pathname+"/"+path;
         }
         function del(path){
-            location.href = "http://localhost:8080/SmolNAS/delete?path="+path;
+            location.href = "http://localhost:8080/SmolNAS/delete?path="+window.location.pathname+"/"+path;
         }
         document.addEventListener("DOMContentLoaded", function(event) {
             document.getElementById('uploadForm').action=window.location.protocol+"//"+window.location.host+"/SmolNAS/upload?path="+window.location.pathname;

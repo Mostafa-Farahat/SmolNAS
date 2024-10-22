@@ -3,10 +3,7 @@ package util;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.*;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 
 public class DirectoryLister {
     private final Path dataRoot;
@@ -58,12 +55,13 @@ public class DirectoryLister {
 
                     //listing files and directories
                     String fileName = fileNameBuilder.toString();
+                    String fileNameNoSlash = fileName.replaceFirst("/","");
                     Path fullPath =  entityPath.resolve(entity.getFileName());
                     String html = String.format("<div>\n" +
                             "    <a href=\"%s\">%s</a>\n" +
                             "    <button onclick='download(\"%s\")'>Download</button>\n" +
                             "    <button onclick='del(\"%s\")'>Delete</button>\n" +
-                            "</div><br>", newUrl, fileName, fullPath, fullPath);
+                            "</div><br>", newUrl, fileName, fileNameNoSlash, fileNameNoSlash);
                     writer.write(html);
                 }
                 directorTree.close();
